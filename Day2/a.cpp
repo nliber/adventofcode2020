@@ -147,6 +147,8 @@ extern int Main(int /* argc */, char const* const /* argv */[]);
 #endif
 #endif  // C++20
 
+#include <cool/Out.h>
+
 struct Password {
     friend std::istream& operator>>(std::istream& is, Password& that) {
         char dash;
@@ -167,7 +169,17 @@ struct Password {
     std::string password;
 };
 
+struct Passwords : std::vector<Password> {};
+
 int Main(int /* argc */, char const* const /* argv */[]) {
+
+    Passwords passwords;
+    std::copy(std::istream_iterator<Password>(std::cin),
+              std::istream_iterator<Password>(),
+              std::back_inserter(passwords));
+
+    std::cout << cool::Out(passwords) << '\n';
+
 
     Password password;
     while (std::cin >> password)
