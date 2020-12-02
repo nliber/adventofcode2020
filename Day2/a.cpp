@@ -163,6 +163,11 @@ struct Password {
                   << ": " << that.password;
     }
 
+    bool isValid() const {
+        ptrdiff_t count = std::count(password.begin(), password.end(), letter);
+        return lowest <= count && count <= highest;
+    }
+
     int lowest;
     int highest;
     char letter;
@@ -172,18 +177,15 @@ struct Password {
 struct Passwords : std::vector<Password> {};
 
 int Main(int /* argc */, char const* const /* argv */[]) {
-
     Passwords passwords;
     std::copy(std::istream_iterator<Password>(std::cin),
-              std::istream_iterator<Password>(),
-              std::back_inserter(passwords));
+              std::istream_iterator<Password>(), std::back_inserter(passwords));
 
-    std::cout << cool::Out(passwords) << '\n';
+    ptrdiff_t validCount =
+        std::count_if(passwords.begin(), passwords.end(),
+                      [](Password const& p) { return p.isValid(); });
 
-
-    Password password;
-    while (std::cin >> password)
-        std::cout << password << '\n';
+    std::cout << validCount << '\n';
 
     return 0;
 }
