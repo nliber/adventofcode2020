@@ -151,10 +151,19 @@ extern int Main(int /* argc */, char const* const /* argv */[]);
 
 struct ExpenseReport : std::vector<int> {};
 
-inline auto find_sum(ExpenseReport const& er, int sum) {
+inline auto find_sum2(ExpenseReport const& er, int sum) {
     for (auto i = er.begin(); i != er.end(); ++i)
         for (auto j = i + 1; j != er.end(); ++j)
             if ((*i + *j) == sum) return std::tuple(*i, *j);
+
+    throw std::runtime_error("Cannot find sum");
+}
+
+inline auto find_sum3(ExpenseReport const& er, int sum) {
+    for (auto i = er.begin(); i != er.end(); ++i)
+        for (auto j = i + 1; j != er.end(); ++j)
+            for (auto k = j + 1; k != er.end(); ++k)
+                if ((*i + *j + *k) == sum) return std::tuple(*i, *j, *k);
 
     throw std::runtime_error("Cannot find sum");
 }
@@ -164,8 +173,8 @@ int Main(int /* argc */, char const* const /* argv */[]) {
     int i;
     while (std::cin >> i) er.emplace_back(i);
 
-    auto foundSum = find_sum(er, 2020);
-    std::cout << std::get<0>(foundSum) * std::get<1>(foundSum) << '\n';
+    auto foundSum = find_sum3(er, 2020);
+    std::cout << std::get<0>(foundSum) * std::get<1>(foundSum) * std::get<2>(foundSum) << '\n';
 
     return 0;
 }
