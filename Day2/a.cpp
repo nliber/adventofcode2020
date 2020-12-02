@@ -163,9 +163,14 @@ struct Password {
                   << ": " << that.password;
     }
 
-    bool isValid() const {
+    bool isValid1() const {
         ptrdiff_t count = std::count(password.begin(), password.end(), letter);
         return lowest <= count && count <= highest;
+    }
+
+    bool isValid2() const {
+        return 1 == (letter == password.at(static_cast<size_t>(lowest) - 1)) +
+                        (letter == password.at(static_cast<size_t>(highest) - 1));
     }
 
     int lowest;
@@ -183,7 +188,7 @@ int Main(int /* argc */, char const* const /* argv */[]) {
 
     ptrdiff_t validCount =
         std::count_if(passwords.begin(), passwords.end(),
-                      [](Password const& p) { return p.isValid(); });
+                      [](Password const& p) { return p.isValid2(); });
 
     std::cout << validCount << '\n';
 
