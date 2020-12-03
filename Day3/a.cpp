@@ -1,97 +1,87 @@
-extern int Main(int /* argc */, char const*const /* argv */[]);
-
-#include <cstdio>   // Bug workaround -- put this before <cstdlib>
-
-#include <cstdlib>
-#include <csignal>
-#include <csetjmp>
-#include <cstdarg>
-#include <typeinfo>
-#include <bitset>
-#include <functional>
-#include <utility>
-#include <ctime>
-#include <cstddef>
-
-#include <new>
-#include <memory>
-#include <scoped_allocator>
-
-#include <climits>
-#include <cfloat>
-#include <limits>
-
-#include <exception>
-#include <stdexcept>
-#include <cassert>
-#include <cerrno>
-
-#include <cctype>
-#include <cwctype>
-#include <cstring>
-#include <cwchar>
-#include <string>
-
-#include <vector>
-#include <deque>
-#include <list>
-#include <set>
-#include <map>
-#include <stack>
-#include <queue>
+extern int Main(int /* argc */, char const* const /* argv */[]);
 
 #include <algorithm>
-
-#include <iterator>
-
+#include <bitset>
+#include <cassert>
+#include <cctype>
+#include <cerrno>
+#include <cfloat>
+#include <climits>
 #include <cmath>
 #include <complex>
-#include <valarray>
-#include <numeric>
-
-#include <iosfwd>
-#include <ios>
-#include <istream>
-#include <ostream>
-#include <iostream>
+#include <csetjmp>
+#include <csignal>
+#include <cstdarg>
+#include <cstddef>
+#include <cstdio>  // Bug workaround -- put this before <cstdlib>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
+#include <cwchar>
+#include <cwctype>
+#include <deque>
+#include <exception>
 #include <fstream>
+#include <functional>
+#include <ios>
+#include <iosfwd>
+#include <iostream>
+#include <istream>
+#include <iterator>
+#include <limits>
+#include <list>
+#include <map>
+#include <memory>
+#include <new>
+#include <numeric>
+#include <ostream>
+#include <queue>
+#include <scoped_allocator>
+#include <set>
 #include <sstream>
+#include <stack>
+#include <stdexcept>
+#include <string>
+#include <typeinfo>
+#include <utility>
+#include <valarray>
+#include <vector>
 // #include <strstream>    // deprecated
 #include <iomanip>
 #include <streambuf>
 // #include <cstdio>    // Bug workaround -- put this before <cstdlib>
 
-#include <locale>
 #include <clocale>
+#include <locale>
 
 #if __cplusplus >= 201103L
-#include <typeindex>
-#include <type_traits>
 #include <chrono>
-#include <initializer_list>
-#include <tuple>
-#include <cstdint>
 #include <cinttypes>
+#include <cstdint>
+#include <initializer_list>
 #include <system_error>
+#include <tuple>
+#include <type_traits>
+#include <typeindex>
 #if __cplusplus >= 201703L && __has_include(<cuchar>)
-#include <cuchar>   // C++11 header but don't have __has_include until C++17
+#include <cuchar>  // C++11 header but don't have __has_include until C++17
 #endif
 #include <array>
+#include <cfenv>
 #include <forward_list>
-#include <unordered_set>
-#include <unordered_map>
 #include <random>
 #include <ratio>
-#include <cfenv>
+#include <unordered_map>
+#include <unordered_set>
 #if __cplusplus < 201703L
 #include <codecvt>
 #endif
-#include <regex>
 #include <atomic>
-#include <thread>
-#include <mutex>
-#include <future>
 #include <condition_variable>
+#include <future>
+#include <mutex>
+#include <regex>
+#include <thread>
 #endif  // C++11
 
 #if __cplusplus >= 201402L
@@ -105,8 +95,8 @@ extern int Main(int /* argc */, char const*const /* argv */[]);
 #if __has_include(<memory_resource>)
 #include <memory_resource>
 #endif
-#include <string_view>
 #include <charconv>
+#include <string_view>
 #if __has_include(<execution>)
 //#include <execution>  // Doesn't compile under gcc w/o TBB
 #endif
@@ -120,7 +110,7 @@ extern int Main(int /* argc */, char const*const /* argv */[]);
 #if __has_include(<coroutine>) && __cpp_lib_coroutine >= 201902L
 #include <coroutine>
 #endif
-#if __has_include(<compare>) // && __cpp_lib_three_way_comparison >= 201907L
+#if __has_include(<compare>)  // && __cpp_lib_three_way_comparison >= 201907L
 #include <compare>
 #endif
 #include <version>
@@ -130,7 +120,7 @@ extern int Main(int /* argc */, char const*const /* argv */[]);
 #if __has_include(<format>) && __cpp_lib_format >= 201907L
 #include <format>
 #endif
-#if __has_include(<span>) // && __cpp_lib_span >= 202002L
+#if __has_include(<span>)  // && __cpp_lib_span >= 202002L
 #include <span>
 #endif
 #if __has_include(<ranges>) && __cpp_lib_ranges >= 201911L
@@ -157,10 +147,35 @@ extern int Main(int /* argc */, char const*const /* argv */[]);
 #endif
 #endif  // C++20
 
+#include <cool/Out.h>
 
+// Each string is a row
+struct Geology : std::vector<std::string> {
+    size_t trees1(const size_t right = 3, const size_t down = 1) const {
+        const size_t numberRows = size();
+        const size_t numberColumns = at(0).size();
 
-int Main(int /* argc */, char const*const /* argv */[])
-{
+        size_t numberTrees = 0;
+        size_t column = 0;
+
+        for (size_t row = down; row < numberRows; row += down) {
+            column += right;
+            column %= numberColumns;
+            numberTrees += '#' == at(row).at(column);
+        }
+
+        return numberTrees;
+    }
+};
+
+int Main(int /* argc */, char const* const /* argv */[]) {
+    Geology geology;
+    std::copy(std::istream_iterator<std::string>(std::cin),
+              std::istream_iterator<std::string>(),
+              std::back_inserter(geology));
+
+    std::cout << geology.trees1(3, 1) << '\n';
+
     return 0;
 }
 
