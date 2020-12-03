@@ -151,7 +151,7 @@ extern int Main(int /* argc */, char const* const /* argv */[]);
 
 // Each string is a row
 struct Geology : std::vector<std::string> {
-    size_t trees1(const size_t right = 3, const size_t down = 1) const {
+    size_t trees(const size_t right, const size_t down) const {
         const size_t numberRows = size();
         const size_t numberColumns = at(0).size();
 
@@ -174,7 +174,12 @@ int Main(int /* argc */, char const* const /* argv */[]) {
               std::istream_iterator<std::string>(),
               std::back_inserter(geology));
 
-    std::cout << geology.trees1(3, 1) << '\n';
+    std::cout << "Day 3 Part 1: " << geology.trees(3, 1) << '\n';
+    std::cout << "Day 3 Part 2: "
+              << geology.trees(1, 1) * geology.trees(3, 1) *
+                     geology.trees(5, 1) * geology.trees(7, 1) *
+                     geology.trees(1, 2)
+              << '\n';
 
     return 0;
 }
